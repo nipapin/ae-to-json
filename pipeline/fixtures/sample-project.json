@@ -1,0 +1,130 @@
+{
+  "project": {
+    "bitsPerChannel": 8,
+    "numItems": 2,
+    "items": [
+      {
+        "typeName": "Composition",
+        "id": 1,
+        "name": "Minimal Logo Reveal",
+        "width": 1920,
+        "height": 1080,
+        "frameRate": 30,
+        "duration": 2.5,
+        "bgColor": [0, 0, 0],
+        "layers": [
+          {
+            "index": 1,
+            "name": "LOGO",
+            "enabled": true,
+            "inPoint": 0,
+            "outPoint": 2.5,
+            "parent": null,
+            "nullLayer": false,
+            "matchName": "ADBE AV Layer",
+            "source": "/assets/logo.png",
+            "properties": {
+              "Transform": {
+                "properties": {
+                  "Opacity": {
+                    "name": "Opacity",
+                    "matchName": "ADBE Opacity",
+                    "keyframes": [
+                      [0, 0],
+                      [0.8, 100]
+                    ]
+                  },
+                  "Scale": {
+                    "name": "Scale",
+                    "matchName": "ADBE Scale",
+                    "keyframes": [
+                      [0, [92, 92, 100]],
+                      [1.0, [100, 100, 100]]
+                    ]
+                  },
+                  "Position": {
+                    "name": "Position",
+                    "matchName": "ADBE Position",
+                    "keyframes": [[0, [960, 540]]]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "index": 2,
+            "name": "BG",
+            "enabled": true,
+            "inPoint": 0,
+            "outPoint": 2.5,
+            "parent": null,
+            "nullLayer": false,
+            "matchName": "ADBE AV Layer",
+            "properties": {
+              "Transform": {
+                "properties": {
+                  "Opacity": {
+                    "name": "Opacity",
+                    "matchName": "ADBE Opacity",
+                    "keyframes": [[0, 100]]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "typeName": "Composition",
+        "id": 2,
+        "name": "Glitch Logo Slam",
+        "width": 1920,
+        "height": 1080,
+        "frameRate": 30,
+        "duration": 1.5,
+        "bgColor": [0, 0, 0],
+        "layers": [
+          {
+            "index": 1,
+            "name": "logo_main",
+            "enabled": true,
+            "inPoint": 0,
+            "outPoint": 1.5,
+            "parent": null,
+            "matchName": "ADBE AV Layer",
+            "source": "/assets/logo.png",
+            "properties": {
+              "Transform": {
+                "properties": {
+                  "Scale": {
+                    "name": "Scale",
+                    "keyframes": [
+                      [0, [140, 140]],
+                      [0.25, [100, 100]]
+                    ]
+                  },
+                  "Opacity": {
+                    "name": "Opacity",
+                    "keyframes": [
+                      [0, 0],
+                      [0.1, 100]
+                    ]
+                  }
+                }
+              },
+              "Effects": {
+                "properties": {
+                  "Turbulent Displace": {
+                    "name": "Turbulent Displace",
+                    "matchName": "ADBE Turbulent Displace",
+                    "enabled": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
