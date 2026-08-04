@@ -11,7 +11,11 @@
     "test": "node --test test/*.test.js",
     "index": "node bin/ae-agent.js index",
     "search": "node bin/ae-agent.js search",
-    "extract": "node bin/ae-agent.js extract"
+    "extract": "node bin/ae-agent.js extract",
+    "batch-export": "node bin/ae-agent.js batch-export"
+  },
+  "optionalDependencies": {
+    "after-effects": "^0.4.3"
   },
   "engines": {
     "node": ">=18"

@@ -5,8 +5,8 @@ Handlers that turn a large After Effects project archive into something a CEP ag
 This does **not** replace `ae-to-json`. It sits on top of it:
 
 ```text
-.aep / .aepx
-   → (AE + ae-to-json) → raw project JSON
+folder of .aep/.aepx
+   → batch-export (AE) → one JSON per top-level comp
    → extract recipes + cards
    → visual captions (your Visual AI API)
    → embeddings
@@ -16,12 +16,31 @@ This does **not** replace `ae-to-json`. It sits on top of it:
 
 ## Quick start
 
+### A) From a folder of `.aep` / `.aepx` (needs After Effects on Mac/Win)
+
 ```bash
 cd pipeline
+npm i after-effects          # bridges Node → AE
+node bin/ae-agent.js list-aep "/path/to/ae-projects"
+node bin/ae-agent.js batch-export "/path/to/ae-projects" --out ./dumps --dry-run
+node bin/ae-agent.js batch-export "/path/to/ae-projects" --out ./dumps
+```
+
+Exports **one JSON per top-level composition** (`usedIn.length === 0` — not placed in any other comp).
+
+Then continue:
+
+```bash
+node bin/ae-agent.js ingest ./dumps --library ./library
+node bin/ae-agent.js index ./library
+node bin/ae-agent.js search "minimal logo reveal" --library ./library
+```
+
+### B) From existing JSON dumps (no AE)
+
+```bash
+node bin/ae-agent.js split-toplevel ./full-dumps --out ./dumps
 node bin/ae-agent.js extract fixtures/sample-project.json /tmp/ae-out
-node bin/ae-agent.js ingest-one fixtures/sample-project.json --library /tmp/ae-library
-node bin/ae-agent.js index /tmp/ae-library
-node bin/ae-agent.js search "minimal logo reveal" --library /tmp/ae-library
 npm test
 ```
 
@@ -29,7 +48,8 @@ npm test
 
 | You provide | Where |
 |---|---|
-| AE project dumps (`ae-to-json` output) | folder of `*.json` |
+| Folder of `.aep` / `.aepx` | `batch-export <dir>` |
+| Or ae-to-json dumps | `ingest` / `split-toplevel` |
 | Optional preview per comp | `library/comps/<id>/preview.mp4` or `.png` |
 | Optional still frames | `library/comps/<id>/frames/000.png` … |
 | Visual AI API | `AE_VISUAL_AI=http` + `AE_VISUAL_AI_URL` |

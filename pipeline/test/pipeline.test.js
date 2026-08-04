@@ -21,7 +21,7 @@ const SAMPLE = path.join(__dirname, '../fixtures/sample-project.json');
 test('extract yields one doc per composition', () => {
   const aeJson = JSON.parse(fs.readFileSync(SAMPLE, 'utf8'));
   const docs = extractFromAeJson(aeJson, { projectId: 'sample' });
-  assert.equal(docs.length, 2);
+  assert.equal(docs.length, 3);
   assert.equal(docs[0].recipe.source.compName, 'Minimal Logo Reveal');
   assert.ok(docs[0].recipe.layers.some((l) => l.role === 'logo'));
   assert.ok(docs[0].recipe.motionSummary.dominantMotion.includes('fade in'));

@@ -10,14 +10,87 @@ const {
   extractFromAeJson,
   createVisualAiProvider,
   createEmbeddingProvider,
-  recipeToJsx
+  recipeToJsx,
+  batchExportFromAep,
+  batchSplitJsonDumps,
+  findAepFiles
 } = require('../src');
+
+function flag(args, name) {
+  return args.includes(name);
+}
+
+function flagValue(args, name, fallback) {
+  const i = args.indexOf(name);
+  if (i === -1) return fallback;
+  return args[i + 1];
+}
 
 async function main() {
   const [cmd, ...rest] = process.argv.slice(2);
 
   if (!cmd || cmd === 'help' || cmd === '--help') {
     printHelp();
+    return;
+  }
+
+  if (cmd === 'batch-export') {
+    const projectsDir = required(rest[0], 'projects directory (.aep/.aepx)');
+    const outDir = flagValue(rest, '--out', path.join(process.cwd(), 'dumps'));
+    const dryRun = flag(rest, '--dry-run');
+    const limitRaw = flagValue(rest, '--limit', null);
+    const result = await batchExportFromAep(projectsDir, {
+      outDir,
+      dryRun,
+      limit: limitRaw != null ? Number(limitRaw) : Infinity,
+      stopOnError: flag(rest, '--stop-on-error')
+    });
+    console.log(JSON.stringify({
+      projectCount: result.projectCount,
+      writtenCount: (result.written || []).length,
+      errorCount: (result.errors || []).length,
+      outDir: result.outDir,
+      dryRun: result.dryRun,
+      manifestPath: result.manifestPath || null,
+      projects: result.dryRun ? result.projects : undefined,
+      errors: result.errors
+    }, null, 2));
+    if (result.errors && result.errors.length) process.exitCode = 2;
+    return;
+  }
+
+  if (cmd === 'list-aep') {
+    const projectsDir = required(rest[0], 'projects directory');
+    const files = findAepFiles(projectsDir);
+    console.log(JSON.stringify({ count: files.length, files }, null, 2));
+    return;
+  }
+
+  if (cmd === 'split-toplevel') {
+    const input = required(rest[0], 'json dump or dumps directory');
+    const outDir = flagValue(rest, '--out', path.join(process.cwd(), 'dumps'));
+    const stat = fs.statSync(input);
+    let result;
+    if (stat.isDirectory()) {
+      result = batchSplitJsonDumps(input, { outDir });
+    } else {
+      // single file
+      fs.mkdirSync(outDir, { recursive: true });
+      const { splitTopLevelComps } = require('../src/batch/topLevelComps');
+      const aeJson = readJson(input);
+      const parts = splitTopLevelComps(aeJson, {
+        projectName: path.basename(input, '.json'),
+        projectPath: input
+      });
+      const written = [];
+      for (const part of parts) {
+        const outPath = path.join(outDir, part.fileName + '.json');
+        writeJson(outPath, part.json);
+        written.push(outPath);
+      }
+      result = { outDir, written };
+    }
+    console.log(JSON.stringify(result, null, 2));
     return;
   }
 
@@ -129,6 +202,14 @@ function printHelp() {
   console.log(`ae-agent — After Effects library indexer for CEP agents
 
 Usage:
+  # From .aep / .aepx (requires After Effects + npm i after-effects)
+  ae-agent batch-export <projectsDir> --out ./dumps [--dry-run] [--limit N]
+  ae-agent list-aep <projectsDir>
+
+  # From existing ae-to-json dumps (no AE)
+  ae-agent split-toplevel <dump.json|dumpsDir> --out ./dumps
+
+  # Indexing pipeline
   ae-agent extract <ae-json> [outDir]
   ae-agent ingest <dumpsDir> [--library library]
   ae-agent ingest-one <ae-json> [--library library]

@@ -1,7 +1,7 @@
 {
   "project": {
     "bitsPerChannel": 8,
-    "numItems": 2,
+    "numItems": 3,
     "items": [
       {
         "typeName": "Composition",
@@ -12,6 +12,7 @@
         "frameRate": 30,
         "duration": 2.5,
         "bgColor": [0, 0, 0],
+        "usedIn": [],
         "layers": [
           {
             "index": 1,
@@ -71,6 +72,57 @@
                 }
               }
             }
+          },
+          {
+            "index": 3,
+            "name": "Logo Precomp",
+            "enabled": true,
+            "inPoint": 0,
+            "outPoint": 2.5,
+            "parent": null,
+            "matchName": "ADBE AV Layer",
+            "properties": {
+              "Transform": {
+                "properties": {
+                  "Opacity": {
+                    "name": "Opacity",
+                    "keyframes": [[0, 100]]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "typeName": "Composition",
+        "id": 10,
+        "name": "Logo Inner Precomp",
+        "width": 500,
+        "height": 500,
+        "frameRate": 30,
+        "duration": 2.5,
+        "bgColor": [0, 0, 0],
+        "usedIn": [{ "id": 1, "name": "Minimal Logo Reveal" }],
+        "layers": [
+          {
+            "index": 1,
+            "name": "shape",
+            "enabled": true,
+            "inPoint": 0,
+            "outPoint": 2.5,
+            "parent": null,
+            "matchName": "ADBE AV Layer",
+            "properties": {
+              "Transform": {
+                "properties": {
+                  "Opacity": {
+                    "name": "Opacity",
+                    "keyframes": [[0, 100]]
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -83,6 +135,7 @@
         "frameRate": 30,
         "duration": 1.5,
         "bgColor": [0, 0, 0],
+        "usedIn": [],
         "layers": [
           {
             "index": 1,
